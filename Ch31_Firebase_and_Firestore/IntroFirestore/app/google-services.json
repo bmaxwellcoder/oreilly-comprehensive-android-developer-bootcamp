@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "222336976291",
+    "project_id": "introfirestore-a1342",
+    "storage_bucket": "introfirestore-a1342.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222336976291:android:3c7145addf3e052a704616",
+        "android_client_info": {
+          "package_name": "com.example.introfirestore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQoDKKsgha6vHCZlmzX5Qhm8LVEqHabNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

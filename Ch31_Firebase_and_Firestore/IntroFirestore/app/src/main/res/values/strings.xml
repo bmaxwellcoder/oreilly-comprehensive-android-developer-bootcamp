@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">IntroFirestore</string>
+    <string name="hint_enter_title">Enter Title</string>
+    <string name="hint_enter_thoughts">Enter Thoughts</string>
+    <string name="button_save">Save</string>
+    <string name="button_show">Show</string>
+    <string name="button_update_title">Update Title</string>
+    <string name="button_update_thought">Update Thought</string>
+    <string name="button_delete_title_and_thought">Delete Title and Thought</string>
+</resources>
