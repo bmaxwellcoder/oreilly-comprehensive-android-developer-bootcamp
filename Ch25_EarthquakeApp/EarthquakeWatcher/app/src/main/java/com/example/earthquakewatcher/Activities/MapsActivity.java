@@ -30,7 +30,9 @@ import com.android.volley.toolbox.Volley;
 import com.example.earthquakewatcher.Model.Earthquake;
 import com.example.earthquakewatcher.R;
 import com.example.earthquakewatcher.UI.CustomInfoWindow;
+import com.example.earthquakewatcher.Util.ApiKeyLoader;
 import com.example.earthquakewatcher.Util.Constants;
+import com.example.earthquakewatcher.Util.MapUtils;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -67,10 +69,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Initialize Google Maps API key from properties file
+        // This must be done before the map is created
+        MapUtils.initializeApiKey(getApplicationContext());
+
+        // Log the API key for verification during development
+        Log.d("API_KEY", "Using API Key: " + ApiKeyLoader.getApiKey(getApplicationContext()));
+
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be
+        // used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -95,7 +105,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)
         };
 
-
         queue = Volley.newRequestQueue(this);
 
         getEarthquakes();
@@ -111,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     try {
                         JSONArray features = response.getJSONArray("features");
                         int count = Math.min(features.length(), Constants.LIMIT);
-                        
+
                         for (int i = 0; i < count; i++) {
                             Earthquake earthquake = new Earthquake();
                             // Get properties
@@ -165,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         if (products.has("nearby-cities")) {
                             Object nearbyCities = products.get("nearby-cities");
-                            
+
                             if (nearbyCities instanceof JSONArray) {
                                 JSONArray nearbyCitiesArray = (JSONArray) nearbyCities;
                                 if (nearbyCitiesArray.length() > 0) {
@@ -219,17 +228,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         // Log earthquake details for debugging
-        Log.d("Earthquake", "Added: " + earthquake.getPlace() + 
+        Log.d("Earthquake", "Added: " + earthquake.getPlace() +
                 " (Magnitude: " + earthquake.getMagnitude() + ")");
     }
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * This is where we can add markers or lines, add listeners or move the camera.
+     * In this case,
      * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * If Google Play services is not installed on the device, the user will be
+     * prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the
+     * user has
      * installed Google Play services and returned to the app.
      */
     @Override
@@ -269,23 +281,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-        if (
-                (ActivityCompat.checkSelfPermission(this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED)
-                        && (ActivityCompat.checkSelfPermission(this,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED)) {
+        if ((ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                && (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
+            // ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
+            // public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            // int[] grantResults)
+            // to handle the case where the user grants the permission. See the
+            // documentation
             // for ActivityCompat#requestPermissions for more details.
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 1);
         } else if (Build.VERSION.SDK_INT < 23) {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
@@ -301,23 +311,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     locationListener);
         }
 
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // // Add a marker in Sydney and move the camera
+        // LatLng sydney = new LatLng(-34, 151);
+        // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in
+        // Sydney"));
+        // mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (grantResults.length > 0 && grantResults[0]
-                == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
                         0,
@@ -331,9 +340,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onInfoWindowClick(@NonNull Marker marker) {
         // API used changes response format
         getEarthquakeDetails(marker.getTag().toString());
-//        Toast.makeText(getApplicationContext(), marker.getTag().toString(),
-//                        Toast.LENGTH_LONG)
-//                .show();
+        // Toast.makeText(getApplicationContext(), marker.getTag().toString(),
+        // Toast.LENGTH_LONG)
+        // .show();
     }
 
     private void getEarthquakeDetails(String url) {
@@ -355,7 +364,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     JSONObject contents = nearbyCity.getJSONObject("contents");
                                     JSONObject nearbyCitiesJson = contents.getJSONObject("nearby-cities.json");
                                     String nearbyCitiesUrl = nearbyCitiesJson.getString("url");
-                                    
+
                                     getMoreDetails(nearbyCitiesUrl);
                                 }
                             }
@@ -395,20 +404,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (citiesObject.getString("tectonicSummary") != null) {
                                     JSONObject tectonic = citiesObject.getJSONObject("tectonicSummary");
                                     if (tectonic.has("text") && tectonic.getString("text'") != null) {
-                                       String text = tectonic.getString("text");
+                                        String text = tectonic.getString("text");
                                         htmlPop.loadDataWithBaseURL(null,
                                                 text,
                                                 "text/html",
                                                 "UTF-8",
                                                 null);
                                     }
-                                };
+                                }
+                                ;
                             }
 
-                                stringBuilder.append("City: " + citiesObject.getString("name")
-                                        + "\n" + "Distance: " + citiesObject.getString("distance")
-                                        + "\n" + "Population: " + citiesObject.getString("population"));
-
+                            stringBuilder.append("City: " + citiesObject.getString("name")
+                                    + "\n" + "Distance: " + citiesObject.getString("distance")
+                                    + "\n" + "Population: " + citiesObject.getString("population"));
 
                             stringBuilder.append("\n\n");
                         }
