@@ -19,7 +19,11 @@ This repository contains various projects covering Android development concepts 
 - **Fragments** - Managing UI components with fragments
 - **Firebase** - Cloud database integration
 
-## Project Highlights
+## Project Notes
+This repository is primarily for learning purposes. Many of the apps could 
+benefit from UI enhancements and updated code to address deprecated 
+features. However, similar to process of the learning and growth,
+this repository remains a work in progress.
 
 ### MakeItRain
 A simple app demonstrating UI interaction and basic Java programming.
