@@ -40,6 +40,26 @@ A task management app using Android Room for persistence.
 ### EarthquakeApp
 An app that displays earthquake information, featuring network operations and JSON parsing.
 
+#### API Key Requirements
+If you want to run the EarthquakeApp, you'll need your own Google Maps API key:
+
+1. Get a Google Maps API key from the [Google Cloud Console](https://console.cloud.google.com):
+   - Create a new project 
+   - Enable the Maps SDK for Android
+   - Create an API key with appropriate restrictions
+
+2. Create a file at this location:
+   ```
+   Ch25_EarthquakeApp/EarthquakeWatcher/app/src/main/assets/apikeys.properties
+   ```
+
+3. Add your API key to the file in this format:
+   ```
+   MAPS_API_KEY=YourGoogleMapsAPIKeyHere
+   ```
+
+4. The app uses a custom loader to securely load this key at runtime without exposing it in the source code.
+
 ### BabyNeedsApp
 A shopping list app with database operations and RecyclerView.
 
@@ -65,13 +85,15 @@ Each project directory contains a standalone Android application. To run any pro
 1. Clone this repository
 2. Open the specific project folder in Android Studio
 3. Sync Gradle files
-4. Run the application on an emulator or physical device
+4. For projects requiring API keys (like EarthquakeApp), follow the specific instructions above
+5. Run the application on an emulator or physical device
 
 ## Requirements
 
 - Android Studio
 - Minimum SDK version varies by project (typically API level 21+)
 - Java Development Kit (JDK)
+- Google Maps API key (for EarthquakeApp)
 
 ## License
 
